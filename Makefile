@@ -5,10 +5,10 @@ LDFLAGS= -lfcgi
 AS= nasm 
 ASFLAGS= -f elf64
 
-test: test.asm 
-	$(AS) $(ASFLAGS) test.asm 
-	$(CC) $(CFLAGS) -o test test.o
+test: asmblog.asm 
+	$(AS) $(ASFLAGS) asmblog.asm 
+	$(CC) $(CFLAGS) -o asmblog asmblog.o
 
 clean: 
 	rm -f *.o 
-	rm -f test
+	rm -f asmblog
