@@ -9,7 +9,6 @@
 
 data db 'Content-Type: text/plain',10, 10, 0
 msg db 'Hello World!', 10, 0
-counter db '%d', 10, 0
 len equ $-msg
 
 [section .code]
@@ -30,14 +29,6 @@ main:
   mov rdi, msg
   mov rax, 0
   call FCGI_printf
-
-  mov rcx, 0
- .loop:
-  inc rcx
-  mov rdi, counter
-  call FCGI_printf
-  test rcx, 100
-  jns .loop
 
  .faccept: 
   call FCGI_Accept
