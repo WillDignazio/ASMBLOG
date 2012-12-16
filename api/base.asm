@@ -1,4 +1,4 @@
-; Will Dignazio 
+; Will Dignazio <wdignazio@gmail.com>
 ; ASMBLOG 2012 
 ; 
 ; Base assembly API, defines base system call values, such as 
@@ -6,6 +6,7 @@
 
 [extern FCGI_Accept]
 [extern FCGI_printf]
+[extern FCGI_fopen]
 [extern printf]
 
 %define stdin   0
