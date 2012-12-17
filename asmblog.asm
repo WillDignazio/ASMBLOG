@@ -8,11 +8,13 @@
 
 %include "base.asm"
 %include "report.asm"
+%include "string.asm"
 
 [global main]
 [section .data] 
 
 data db 'Content-Type: text/plain',10, 10, 0
+numout db 'Length: %d', 10, 0
 
 [section .code]
 
@@ -25,13 +27,24 @@ main:
   mov [rbp-16], rsi
   jmp .faccept
 
-
  .fprint: 
   mov rdi, data         ; Load content to display
   mov rax, stdout       ; FCGI's stdout
   call FCGI_printf      
 
   call nginxreport
+
+  mov rsi, numout
+  call strlen
+  mov rdi, numout 
+  mov rsi, rbx
+  call FCGI_printf
+
+  mov rsi, data
+  call strlen
+  mov rdi, numout
+  mov rsi, rbx
+  call FCGI_printf
 
  .faccept: 
   call FCGI_Accept

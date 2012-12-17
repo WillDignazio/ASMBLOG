@@ -8,8 +8,8 @@ PID=`cat ./spawn.pid`
 
 test: asmblog.asm 
 	$(AS) $(ASFLAGS) asmblog.asm 
-	$(CC) $(CFLAGS) -c test.c
-	$(CC) $(CFLAGS) -o asmblog asmblog.o test.o
+	#$(CC) $(CFLAGS) -c test.c
+	$(CC) $(CFLAGS) -o asmblog asmblog.o
 
 spawn: test
 	spawn-fcgi -a127.0.0.1 -p9000 -P./spawn.pid asmblog
