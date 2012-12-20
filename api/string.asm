@@ -18,7 +18,7 @@ strlen:
   je .exit
   inc rax
   jmp .loop
- .exit
+ .exit:
   mov rbx, rax          ; rbx is the return value register
   pop rax
   ret

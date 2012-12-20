@@ -9,6 +9,10 @@
 [extern FCGI_fopen]
 [extern printf]
 
+[section .data] 
+
+brkaddr dd 0
+
 %define stdin   0
 %define stdout  1
 %define stderr  2
@@ -21,3 +25,25 @@
 %define SYS_write   4       ;uint       |const char *
 %define SYS_open    5       ;const char*|int
 %define SYS_close   6       ;uint       
+
+
+[section .code] 
+
+[extern edata]  ; First address past end of data segment
+[extern etext]  ; First address past end of test (code) segment
+[extern end]    ; First address past end of uninitialized data segment
+
+initialize: 
+  push rax
+  mov rdi, 0            ; We need the program break point
+  call sbrk             ; Retrieve it 
+  mov [brkaddr], rax    ; Store it in a variable
+  pop rax
+  ret
+
+; Increment data segment
+;   - rax: Increase by amount
+incdata: 
+  push rax
+  pop rax
+  ret
