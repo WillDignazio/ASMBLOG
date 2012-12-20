@@ -25,7 +25,7 @@ brkaddr dd 0
 %define SYS_write   4       ;uint       |const char *
 %define SYS_open    5       ;const char*|int
 %define SYS_close   6       ;uint       
-
+%define SYS_brk     12     
 
 [section .code] 
 
@@ -33,6 +33,9 @@ brkaddr dd 0
 [extern etext]  ; First address past end of test (code) segment
 [extern end]    ; First address past end of uninitialized data segment
 
+; Initialize AMBLOG
+; Runs a series of routines to construct the proper 
+; structures, and initialize the backend. 
 initialize: 
   push rax
   mov rdi, 0            ; We need the program break point
@@ -41,9 +44,33 @@ initialize:
   pop rax
   ret
 
+; Gets the location of the program break interrupt point
+;   USES: 
+;       - rax (non-desctructive)
+;       - rdi
+;   RETURNS: 
+;       - rsi: Convenient storing location for output
+get_program_break: 
+  push rax 
+  mov rdi, 0
+  call sbrk
+  mov rsi, rax
+  pop rax 
+  ret
+
 ; Increment data segment
-;   - rax: Increase by amount
+;   USES: 
+;       - rbx (non-destructive)
+;   ARGS: 
+;       - rax: Increase by amount
 incdata: 
   push rax
+  mov rbx, [brkaddr] 
+  push rbx
+  add rbx, rax
+  mov rdi, rbx
+  mov rax, SYS_brk
+  int 80h
+  pop rbx
   pop rax
   ret

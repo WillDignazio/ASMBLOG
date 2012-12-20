@@ -16,7 +16,7 @@
 [section .data] 
 
 data db 'Content-Type: text/plain',10, 10, 0
-numout db 'Length: %p', 10, 0
+numout db '%p', 10, 0
 err db 'Error', 10, 0
 
 [section .code]
@@ -46,13 +46,16 @@ main:
  
   jmp .faccept          ; Main loop for asmblog, serves the 
                         ; data that the end user will get. 
-
  .fprint: 
   mov rdi, data         ; Load content to display
   mov rax, stdout       ; FCGI's stdout
   call FCGI_printf      
 
   call nginxreport      ; Report details about nginx
+  call get_program_break 
+  mov rax, stdout 
+  mov rdi, numout
+  call FCGI_printf
 
  .faccept: 
   call FCGI_Accept
