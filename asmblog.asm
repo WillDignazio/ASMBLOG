@@ -45,9 +45,6 @@ main:
   test eax, eax         ; Test for 0
   jns .fprint           ; jns == Jump if condition is met
 
-  ;mov rax, 60          ; Exit  Function
-  ;mov rdi, 0           ; return status
-  ;syscall
-  mov eax, 0
-  leave 
-  ret
+  mov rax, 60          ; Exit  Function
+  mov rdi, 0           ; return status
+  syscall
