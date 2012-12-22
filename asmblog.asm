@@ -30,20 +30,7 @@ main:
   mov [rbp-16], rsi
   
   call initialize
- 
- .initialize: 
-  mov rax, [brkaddr]    ; Move stored data address
-  add rax, 100          ; Adding 100 Bytes to data segment
-  mov rdi, rax          
-  mov rax, 0x0C         ; BRK syscall
-  int 80h               ; Call system
-  cmp rax, -1
-  je .suc
-  mov rdi, err
-  mov rax, stdout
-  call FCGI_printf
- .suc:
- 
+  
   jmp .faccept          ; Main loop for asmblog, serves the 
                         ; data that the end user will get. 
  .fprint: 
@@ -52,15 +39,11 @@ main:
   call FCGI_printf      
 
   call nginxreport      ; Report details about nginx
-  call get_program_break 
-  mov rax, stdout 
-  mov rdi, numout
-  call FCGI_printf
-
+  
  .faccept: 
   call FCGI_Accept
   test eax, eax         ; Test for 0
-  jns .fprint
+  jns .fprint           ; jns == Jump if condition is met
 
   ;mov rax, 60          ; Exit  Function
   ;mov rdi, 0           ; return status

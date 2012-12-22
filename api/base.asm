@@ -8,9 +8,11 @@
 [extern FCGI_printf]
 [extern FCGI_fopen]
 [extern printf]
+[extern malloc]
 
 [section .data] 
 
+unifail db "Subroutine Failed", 10, 0
 brkaddr dd 0
 
 %define stdin   0
@@ -58,19 +60,17 @@ get_program_break:
   pop rax 
   ret
 
-; Increment data segment
+; Increment Break Point
 ;   USES: 
-;       - rbx (non-destructive)
+;       - rbx 
 ;   ARGS: 
-;       - rax: Increase by amount
-incdata: 
+;       - rdi: Increase by amount
+incbreak: 
   push rax
   mov rbx, [brkaddr] 
-  push rbx
-  add rbx, rax
-  mov rdi, rbx
+  add rax, rbx
+  mov rdi, rax
   mov rax, SYS_brk
   int 80h
-  pop rbx
   pop rax
   ret
