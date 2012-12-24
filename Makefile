@@ -8,7 +8,6 @@ PID=`cat ./spawn.pid`
 
 test: asmblog.asm 
 	$(AS) $(ASFLAGS) asmblog.asm 
-	#$(CC) $(CFLAGS) -c test.c
 	$(CC) $(CFLAGS) -o asmblog asmblog.o
 
 spawn: test

@@ -9,6 +9,7 @@
 %include "base.asm"
 %include "report.asm"
 %include "string.asm"
+%include "html.asm"
 
 [extern sbrk]
 
@@ -30,7 +31,7 @@ main:
   mov [rbp-16], rsi
   
   call initialize
-  
+
   jmp .faccept          ; Main loop for asmblog, serves the 
                         ; data that the end user will get. 
  .fprint: 
@@ -39,7 +40,9 @@ main:
   call FCGI_printf      
 
   call nginxreport      ; Report details about nginx
-  
+  mov rdi, HEADER_HTML
+  call serve_content_header
+ 
  .faccept: 
   call FCGI_Accept
   test eax, eax         ; Test for 0
