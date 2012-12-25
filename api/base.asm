@@ -7,8 +7,13 @@
 [extern FCGI_Accept]
 [extern FCGI_printf]
 [extern FCGI_fopen]
+[extern FCGI_fgets]
 [extern printf]
 [extern malloc]
+
+[section .bss] 
+
+linebuffer: resb 500
 
 [section .data] 
 

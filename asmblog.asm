@@ -16,8 +16,8 @@
 [global main]
 [section .data] 
 
-data db 'Content-Type: text/plain',10, 10, 0
 numout db '%p', 10, 0
+strout db '%s', 0
 err db 'Error', 10, 0
 
 [section .code]
@@ -35,14 +35,34 @@ main:
   jmp .faccept          ; Main loop for asmblog, serves the 
                         ; data that the end user will get. 
  .fprint: 
-  mov rdi, data         ; Load content to display
-  mov rax, stdout       ; FCGI's stdout
-  call FCGI_printf      
-
-  call nginxreport      ; Report details about nginx
   mov rdi, HEADER_HTML
   call serve_content_header
+
+  call serve_header
+  call nginxreport      ; Report details about nginx
+
+  mov rdi, header_html_file
+  mov rsi, READ_ONLY
+  call FCGI_fopen
  
+  mov qword[headerfp], rdx
+  mov rdi, linebuffer
+  mov rsi, 500
+  call FCGI_fgets
+  mov rsi, linebuffer
+  mov rdi, strout
+  mov rax, stdout
+  call FCGI_printf
+
+  mov qword[headerfp], rdx
+  mov rdi, linebuffer
+  mov rsi, 500
+  call FCGI_fgets
+  mov rsi, linebuffer
+  mov rdi, strout
+  mov rax, stdout
+  call FCGI_printf
+
  .faccept: 
   call FCGI_Accept
   test eax, eax         ; Test for 0
