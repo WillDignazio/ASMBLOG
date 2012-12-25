@@ -39,29 +39,8 @@ main:
   call serve_content_header
 
   call serve_header
-  call nginxreport      ; Report details about nginx
+  ;call nginxreport      ; Report details about nginx
 
-  mov rdi, header_html_file
-  mov rsi, READ_ONLY
-  call FCGI_fopen
- 
-  mov qword[headerfp], rdx
-  mov rdi, linebuffer
-  mov rsi, 500
-  call FCGI_fgets
-  mov rsi, linebuffer
-  mov rdi, strout
-  mov rax, stdout
-  call FCGI_printf
-
-  mov qword[headerfp], rdx
-  mov rdi, linebuffer
-  mov rsi, 500
-  call FCGI_fgets
-  mov rsi, linebuffer
-  mov rdi, strout
-  mov rax, stdout
-  call FCGI_printf
 
  .faccept: 
   call FCGI_Accept

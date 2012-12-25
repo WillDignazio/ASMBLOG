@@ -19,15 +19,13 @@ readwriteflag db 'rw', 0
 header_html_file db 'html/header.html', 0   ; HTML file path
 headerfp dq 0                               ; HTML file handler field
 
-%define READ_WRITE readwriteflag
-%define WRITE_ONLY writeflag
-%define READ_ONLY readflag
 
-%define HEADER_HTML content_header_text_html
-%define HEADER_PLAIN content_header_text_plain
-%define HEADER_CSS content_header_text_css
+[section .code]
 
-; Serve the Content Header String
+; Serve the content header string, and allow for 
+; content header to be passed in through the rax 
+; register.
+;
 ; USES: 
 ;   - rax, rdi
 ; ARGS: 
@@ -39,16 +37,33 @@ serve_content_header:
   pop rax
   ret
 
-; Serves header HTML file for ASMBLOG
-; USES: 
-;   - rax, rdi, rsi
-; ARGS: 
+; Serves header HTML file for ASMBLOG, this 
+; is another example of cheating by not using
+; syscalls, and will have to be changed in the 
+; future. I am not sure of the repercussions 
+; however; FCGI functionality seems to be written
+; specifically for this kind of thing. It might be 
+; because they have extra routines to check for 
+; potential malicious code.
 ;
+; USES: 
+;   - rax, rdi, rsi, rdx
+; ARGS: 
+;   -
 serve_header: 
   push rax
-
+ .read:
+  mov rdx, qword[headerfp]  ; Initialized during the base.asm's initialize call
+  mov rdi, linebuffer       ; TODO: make dynamically allocated so not 500B max
+  mov rsi, 500              ; Pull up to 500 bytes from line
+  call FCGI_fgets
+  cmp rax, 0                ; Compare the pulled line with the end of file
+  je .done      
+  mov rsi, linebuffer       ; Point to beginning of line
+  mov rdi, strout           ; Prep a container for printf
+  mov rax, stdout           ; Set standard output
+  call FCGI_printf          
+  jmp .read
+ .done:
   pop rax
   ret
-
-[section .code]
-

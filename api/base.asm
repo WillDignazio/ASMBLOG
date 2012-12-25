@@ -34,6 +34,14 @@ brkaddr dd 0
 %define SYS_close   6       ;uint       
 %define SYS_brk     12     
 
+%define READ_WRITE readwriteflag
+%define WRITE_ONLY writeflag
+%define READ_ONLY readflag
+
+%define HEADER_HTML content_header_text_html
+%define HEADER_PLAIN content_header_text_plain
+%define HEADER_CSS content_header_text_css
+
 [section .code] 
 
 [extern edata]  ; First address past end of data segment
@@ -48,6 +56,12 @@ initialize:
   mov rdi, 0            ; We need the program break point
   call sbrk             ; Retrieve it 
   mov [brkaddr], rax    ; Store it in a variable
+  
+  mov rdi, header_html_file
+  mov rsi, READ_ONLY
+  call FCGI_fopen
+  mov qword[headerfp], rax
+
   pop rax
   ret
 
