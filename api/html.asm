@@ -69,5 +69,7 @@ serve_header:
   call FCGI_printf          
   jmp .read
  .done:
+  mov rdi, qword[headerfp]
+  call FCGI_fclose
   pop rax
   ret

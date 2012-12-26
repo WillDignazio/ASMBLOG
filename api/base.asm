@@ -8,6 +8,7 @@
 [extern FCGI_printf]
 [extern FCGI_fopen]
 [extern FCGI_fgets]
+[extern FCGI_fclose]
 [extern printf]
 [extern malloc]
 
