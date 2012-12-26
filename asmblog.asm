@@ -39,8 +39,6 @@ main:
   call serve_content_header
 
   call serve_header
-  call nginxreport      ; Report details about nginx
-
 
  .faccept: 
   call FCGI_Accept

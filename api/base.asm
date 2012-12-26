@@ -56,12 +56,6 @@ initialize:
   mov rdi, 0            ; We need the program break point
   call sbrk             ; Retrieve it 
   mov [brkaddr], rax    ; Store it in a variable
-  
-  mov rdi, header_html_file
-  mov rsi, READ_ONLY
-  call FCGI_fopen
-  mov qword[headerfp], rax
-
   pop rax
   ret
 

@@ -52,6 +52,10 @@ serve_content_header:
 ;   -
 serve_header: 
   push rax
+  mov rdi, header_html_file
+  mov rsi, READ_ONLY
+  call FCGI_fopen
+  mov qword[headerfp], rax
  .read:
   mov rdx, qword[headerfp]  ; Initialized during the base.asm's initialize call
   mov rdi, linebuffer       ; TODO: make dynamically allocated so not 500B max

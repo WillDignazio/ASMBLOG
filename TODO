@@ -1,0 +1,17 @@
+Tue 25 Dec 2012 10:30:14 PM EST
+- Another problem is the GET'ing method FCGI, which if I say request 
+  css/default.css, it will only return what it is programmed to. In this
+  case, since their is no REST api, will just return the only thing the 
+  blog can handle, the root data. A TODO is make custom handlers for CSS 
+  and other documents, this should basically be a REST api. Sounds fun.
+
+Tue 25 Dec 2012 09:59:35 PM EST
+- I realized that the serve_header method (html.asm) used to only serve the
+  content once, this is because it would print the lines sequentially while 
+  reading the file and then it's done. This was changed so that at every time
+  you navigate to the webpage, the file is re-read and then displayed as it 
+  would the first time. This has advantages, like being able to edit the
+  webpage without bringing the site down, and disadvantages, like slower data
+  recieve times. A TODO is for a way to dynamically allocate memory for the 
+  header and recognize when changes are made so it can be reloaded (inotify).
+

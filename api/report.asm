@@ -25,7 +25,7 @@ NGINX_SERVER_ADDR db 'SERVER_ADDR', 0
 NGINX_SERVER_PORT db 'SERVER_PORT', 0 
 NGINX_SERVER_NAME db 'SERVER_NAME', 0
 
-version db '0.0.1', 10, 0
+VERSION db '0.0.2', 10, 0
 
 outstub db '%s', 10, 0
 report_header db 'ASMBLOG Version: %s', 10, 0
@@ -45,7 +45,7 @@ query db 'query_string', 10, 0
 nginxreport: 
   push rax              ; Save return point for later
  
-  mov rsi, version 
+  mov rsi, VERSION
   mov rdi, report_header
   mov rax, stdout
   call FCGI_printf      ; ASMBLOG report header
@@ -76,7 +76,7 @@ nginxreport:
 
 report:
   push rax
-  mov rsi, version
+  mov rsi, VERSION
   mov rdi, report_header
   call FCGI_printf
   pop rax
