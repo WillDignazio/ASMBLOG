@@ -12,6 +12,7 @@
 %include "html.asm"
 
 [extern opendir]
+[extern readdir]
 
 [global main]
 [section .data] 
@@ -42,7 +43,39 @@ main:
   call serve_content_header
 
   call serve_header
-  
+ 
+  mov rdi, postpath
+  call opendir
+  mov qword[postfp], rax
+
+  ;mov rdi, qword[postfp]
+  ;call readdir
+  ;mov rdi, rax
+  ;add rdi, 19
+  ;call FCGI_printf
+
+  ;mov rdi, qword[postfp]
+  ;call readdir
+  ;mov rdi, rax
+  ;add rdi, 19
+  ;call FCGI_printf
+
+ .read:
+  mov rdi, qword[postfp]
+  call readdir
+  cmp rax, 0
+  je .done
+  mov rdi, rax
+  add rdi, 19
+  mov rax, stdout
+  call FCGI_printf
+  jmp .read
+ .done:
+
+  ;mov rdi, rax
+  ;add rdi, 19
+  ;call FCGI_printf
+
   mov rdi, _fcgi_sF     ; I am honestly not sure why this needs to happen
   add rdi, 16           ; I believe FCGI has an interal stdout stream that 
                         ; has some funky initialization. I am pretty sure 
