@@ -8,9 +8,6 @@
 curdir db '.', 0
 updir db '..', 0
 
-firstbrk db 'Broke on first', 10, 0
-secondbrk db 'Broke on second', 10, 0
-
 [section .code]
 
 ; String Comparison
