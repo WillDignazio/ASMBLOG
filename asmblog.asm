@@ -12,9 +12,6 @@
 %include "html.asm"
 %include "posts.asm"
 
-[extern opendir]
-[extern readdir]
-
 [global main]
 [section .data] 
 

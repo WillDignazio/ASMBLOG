@@ -19,19 +19,33 @@ postfp dq 0
 ;   -
 serve_posts: 
   push rax
-  mov rdi, postpath
-  call opendir
+  mov rdi, postpath         ; Load constant posts path
+                            ; TODO: make a settable directory
+  call opendir              ; Set the directory file handler
   mov qword[postfp], rax
- .read:
+
+ .read:                     ; Read the directory contents
   mov rdi, qword[postfp]
   call readdir
-  cmp rax, 0
+  cmp rax, 0                ; Done reading contents
   je .done
   mov rdi, rax
-  add rdi, 19
+  add rdi, 19               ; Name of entry pointer in directory entry struct
+  mov rsi, curdir
+  call strcmp               ; Compare for useless entries ('.', '..')
+  cmp rbx, 0
+  jne .read
+  mov rsi, updir
+  call strcmp
+  cmp rbx, 0
+  jne .read
+
   mov rax, stdout
   call FCGI_printf
   jmp .read
+
  .done:
+  mov rdi, qword[postfp]
+  call closedir
   pop rax
   ret

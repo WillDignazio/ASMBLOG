@@ -11,6 +11,10 @@
 [extern FCGI_fclose]
 [extern FCGI_fflush]
 [extern _fcgi_sF]
+
+[extern opendir]
+[extern closedir]
+[extern readdir]
 [extern printf]
 [extern malloc]
 [extern sbrk]
