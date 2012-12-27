@@ -82,7 +82,7 @@ zero_path_buffer:
 ; ARGS: 
 ;   - rdi, string of post name (in posts/ folder)
 ; USES: 
-;   - rbx
+;   - rbx, rcx
 buildpath:
   push rax
   call zero_path_buffer
@@ -92,15 +92,23 @@ buildpath:
   cmp byte[postprefix+rax], 0
   je .prefixdone
   mov rbx, 0
-  mov bl, byte[postprefix+rax]          ; Copy to b - low
-  mov byte[postpathbuffer+rax], bl  ; Copy to buffer
+  mov bl, byte[postprefix+rax]
+  mov byte[postpathbuffer+rax], bl
   inc rax
   jmp .prefix
- .prefixdone:
-   
-
+ .prefixdone:                       ; The prefix has been setup
+  mov rbx, 0
+ .postfix:
+  cmp byte[rdi+rbx], 0      
+  je .postfixdone
+  mov rcx, 0                       
+  mov cl, byte[rdi+rbx]
+  mov byte[postpathbuffer+rbx], cl 
+  inc rbx 
+  jmp .postfix
+ .postfixdone: 
   pop rax
-  ret
+  ret                               ; The buffer should be filled with the full path
 
 ; Serve A Single Post 
 ; Unlike it's counterpart, serve_posts, this function
