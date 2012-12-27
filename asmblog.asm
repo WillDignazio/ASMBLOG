@@ -40,6 +40,8 @@ main:
   call serve_header
   call serve_posts 
 
+  call buildpath
+
   mov rdi, _fcgi_sF     ; I am honestly not sure why this needs to happen
   add rdi, 16           ; I believe FCGI has an interal stdout stream that 
                         ; has some funky initialization. I am pretty sure 

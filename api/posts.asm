@@ -3,10 +3,16 @@
 ; 
 ; Post directory and parsing routines. 
 
+[section .bss]
+
+postpathbuffer: resb 100
+
 [section .data]
 
-postpath db 'posts/', 0
+postprefix db 'posts/', 0
 postfp dq 0
+
+testpost db 'test.txt', 0
 
 [section .code]
 
@@ -19,7 +25,7 @@ postfp dq 0
 ;   -
 serve_posts: 
   push rax
-  mov rdi, postpath         ; Load constant posts path
+  mov rdi, postprefix         ; Load constant posts path
                             ; TODO: make a settable directory
   call opendir              ; Set the directory file handler
   mov qword[postfp], rax
@@ -32,14 +38,20 @@ serve_posts:
   mov rdi, rax
   add rdi, 19               ; Name of entry pointer in directory entry struct
   mov rsi, curdir
+  
   call strcmp               ; Compare for useless entries ('.', '..')
   cmp rbx, 0
   jne .read
   mov rsi, updir
   call strcmp
   cmp rbx, 0
-  jne .read
-
+  jne .read                 ; If this passes, then the entry is most likely 
+                            ; a valid post that needs to be served. 
+ 
+  ; At this point, rdi contains the name 
+  ; of the post within the directory. This will
+  ; be used to encode the post, and serve it out to
+  ; the reader.
   mov rax, stdout
   call FCGI_printf
   jmp .read
@@ -49,3 +61,56 @@ serve_posts:
   call closedir
   pop rax
   ret
+
+; Wipe Post Path Buffer 
+; Wipes the post buffer to all zero's, 
+; a necessity for multiple post paths.
+zero_path_buffer: 
+  push rax 
+  mov rax, 0 
+ .loop: 
+  mov byte[postpathbuffer+rax], 0
+  inc rax
+  cmp rax, 100
+  jne .loop
+  pop rax
+  ret
+
+; Build Pathname 
+; Given a name of a post, append the post/ path prefix 
+; to it, and store then contents in the given buffer. 
+; ARGS: 
+;   - rdi, string of post name (in posts/ folder)
+; USES: 
+;   - rbx
+buildpath:
+  push rax
+  call zero_path_buffer
+  mov rax, 0                        ; Setup our incrementor
+ 
+ .prefix:
+  cmp byte[postprefix+rax], 0
+  je .prefixdone
+  mov rbx, 0
+  mov bl, byte[postprefix+rax]          ; Copy to b - low
+  mov byte[postpathbuffer+rax], bl  ; Copy to buffer
+  inc rax
+  jmp .prefix
+ .prefixdone:
+   
+
+  pop rax
+  ret
+
+; Serve A Single Post 
+; Unlike it's counterpart, serve_posts, this function
+; will serve a singular post based on some given path
+; name in the rdi register. 
+; ARGS: 
+;   - rdi, entry name
+; USES: 
+;   - 
+serve_post:
+  push rax
+   
+  pop rax
