@@ -42,21 +42,6 @@ main:
 
   call serve_header
   call serve_posts 
-  ;mov rdi, qword[postfp]
-  ;call readdir
-  ;mov rdi, rax
-  ;add rdi, 19
-  ;call FCGI_printf
-
-  ;mov rdi, qword[postfp]
-  ;call readdir
-  ;mov rdi, rax
-  ;add rdi, 19
-  ;call FCGI_printf
-
-  ;mov rdi, rax
-  ;add rdi, 19
-  ;call FCGI_printf
 
   mov rdi, _fcgi_sF     ; I am honestly not sure why this needs to happen
   add rdi, 16           ; I believe FCGI has an interal stdout stream that 
