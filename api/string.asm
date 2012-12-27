@@ -25,31 +25,32 @@ secondbrk db 'Broke on second', 10, 0
 strcmp: 
   push rax 
   mov rbx, 0
-  mov rax, 0
+  mov rax, 0                ; Set out incrementor
 
- .cmploop:
+ .cmploop:                  ; Main comparison loop
   mov dl, byte[rdi+rax]
   cmp byte[rsi+rax], dl
-  jne .notequal 
+  jne .notequal             ; If at any point they are not 
+                            ; equal, we're done here
 
-  cmp byte[rsi+rax], 0
+  cmp byte[rsi+rax], 0      ; If equal, is zero?
   je .breakfirst 
-  cmp byte[rdi+rax], 0
+  cmp byte[rdi+rax], 0      ; How about the other?
   je .breaksecond
 
-  inc rax
-  jmp .cmploop 
+  inc rax                   ; If neither are zero, increment.
+  jmp .cmploop              
 
- .breakfirst: 
-  cmp byte[rdi+rax], 0
+ .breakfirst:               ; If the first was equal to zero (EOS)
+  cmp byte[rdi+rax], 0      ; Check the second for also being zero (EOS)
   jne .notequal
- .breaksecond: 
+ .breaksecond:              ; Do the same in the opposite situation
   cmp byte[rsi+rax], 0
   jne .notequal
 
- .equal: 
-  mov rbx, 1 
- .notequal:
+ .equal:                    ; If determined equal, passing until now
+  mov rbx, 1                ; Set our return value to 1
+ .notequal:                 ; Something was off, return 0, as set in beginning
   pop rax
   ret
 
