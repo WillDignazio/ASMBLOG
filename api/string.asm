@@ -3,6 +3,11 @@
 ;
 ; String Manipulation Module
 
+[section .data]
+
+curdir db '.', 0
+updir db '..', 0
+
 [section .code]
 
 ; String Length 

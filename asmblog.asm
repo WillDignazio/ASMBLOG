@@ -10,6 +10,7 @@
 %include "report.asm"
 %include "string.asm"
 %include "html.asm"
+%include "posts.asm"
 
 [extern opendir]
 [extern readdir]
@@ -20,9 +21,6 @@
 numout db '%p', 10, 0
 strout db '%s', 0
 err db 'Error', 10, 0
-
-postpath db 'posts/', 0
-postfp dq 0
 
 [section .code]
 
@@ -43,11 +41,7 @@ main:
   call serve_content_header
 
   call serve_header
- 
-  mov rdi, postpath
-  call opendir
-  mov qword[postfp], rax
-
+  call serve_posts 
   ;mov rdi, qword[postfp]
   ;call readdir
   ;mov rdi, rax
@@ -59,18 +53,6 @@ main:
   ;mov rdi, rax
   ;add rdi, 19
   ;call FCGI_printf
-
- .read:
-  mov rdi, qword[postfp]
-  call readdir
-  cmp rax, 0
-  je .done
-  mov rdi, rax
-  add rdi, 19
-  mov rax, stdout
-  call FCGI_printf
-  jmp .read
- .done:
 
   ;mov rdi, rax
   ;add rdi, 19
