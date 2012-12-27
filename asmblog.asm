@@ -11,7 +11,7 @@
 %include "string.asm"
 %include "html.asm"
 
-[extern sbrk]
+[extern opendir]
 
 [global main]
 [section .data] 
@@ -19,6 +19,9 @@
 numout db '%p', 10, 0
 strout db '%s', 0
 err db 'Error', 10, 0
+
+postpath db 'posts/', 0
+postfp dq 0
 
 [section .code]
 
@@ -39,6 +42,15 @@ main:
   call serve_content_header
 
   call serve_header
+  
+  mov rdi, _fcgi_sF     ; I am honestly not sure why this needs to happen
+  add rdi, 16           ; I believe FCGI has an interal stdout stream that 
+                        ; has some funky initialization. I am pretty sure 
+                        ; that _fcgi_sF is just a struct, and adding 16 
+                        ; to is pointing to a certain property.
+
+  mov rax, stdout       ; Just in case any data was left over
+  call FCGI_fflush      ; flush it, it may not have has a newline.
 
  .faccept: 
   call FCGI_Accept

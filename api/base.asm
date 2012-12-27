@@ -9,8 +9,11 @@
 [extern FCGI_fopen]
 [extern FCGI_fgets]
 [extern FCGI_fclose]
+[extern FCGI_fflush]
+[extern _fcgi_sF]
 [extern printf]
 [extern malloc]
+[extern sbrk]
 
 [section .bss] 
 
