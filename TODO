@@ -1,3 +1,9 @@
+Thu 27 Dec 2012 08:32:55 PM EST
+- A thing that really needs to be added in is a method of parsing a configuration 
+  file. This could pretty easily be tied in with whatever mechanism is built to 
+  dynamically built in commands. i.e. $POST1$ would post the contents of the first 
+  post.
+
 Tue 25 Dec 2012 10:30:14 PM EST
 - Another problem is the GET'ing method FCGI, which if I say request 
   css/default.css, it will only return what it is programmed to. In this

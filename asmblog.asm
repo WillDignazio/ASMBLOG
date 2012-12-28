@@ -19,6 +19,8 @@ numout db '%p', 10, 0
 strout db '%s', 0
 err db 'Error', 10, 0
 
+testpost db 'test.txt', 0
+
 [section .code]
 
 main: 
@@ -39,12 +41,9 @@ main:
 
   call serve_header
   call serve_posts 
- 
+
   mov rdi, testpost
-  call buildpath
-  mov rdi, postpathbuffer
-  mov rax, stdout 
-  call FCGI_printf
+  call serve_post
 
   mov rdi, _fcgi_sF     ; I am honestly not sure why this needs to happen
   add rdi, 16           ; I believe FCGI has an interal stdout stream that 

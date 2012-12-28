@@ -11,8 +11,7 @@ postpathbuffer: resb 100
 
 postprefix db 'posts/', 0
 postfp dq 0
-
-testpost db 'test.txt', 0
+postservefp dq 0
 
 [section .code]
 
@@ -104,7 +103,7 @@ buildpath:
   je .postfixdone
   mov rcx, 0                       
   mov cl, byte[rdi+rbx]
-  mov byte[postpathbuffer+rbx+rax], cl 
+  mov byte[postpathbuffer+rbx+rax], cl  ; Move to buffer at sum of offsets
   inc rbx 
   jmp .postfix
  .postfixdone: 
@@ -121,5 +120,22 @@ buildpath:
 ;   - 
 serve_post:
   push rax
-   
+  call buildpath    ; Takes rdi, builds full path with it in postpathbuffer
+  mov rdi, postpathbuffer 
+  mov rsi, READ_ONLY
+  call FCGI_fopen
+  mov qword[postservefp], rax
+ .read:
+  mov rdx, qword[postservefp]
+  mov rdi, linebuffer
+  mov rsi, 500
+  call FCGI_fgets
+  cmp rax, 0
+  je .done
+  mov rsi, linebuffer 
+  mov rdi, strout 
+  mov rax, stdout 
+  call FCGI_printf
+  jmp .read
+ .done:
   pop rax
