@@ -96,6 +96,7 @@ buildpath:
   mov byte[postpathbuffer+rax], bl
   inc rax
   jmp .prefix
+
  .prefixdone:                       ; The prefix has been setup
   mov rbx, 0
  .postfix:
@@ -103,7 +104,7 @@ buildpath:
   je .postfixdone
   mov rcx, 0                       
   mov cl, byte[rdi+rbx]
-  mov byte[postpathbuffer+rbx], cl 
+  mov byte[postpathbuffer+rbx+rax], cl 
   inc rbx 
   jmp .postfix
  .postfixdone: 
