@@ -46,13 +46,13 @@ serve_posts:
   cmp rbx, 0
   jne .read                 ; If this passes, then the entry is most likely 
                             ; a valid post that needs to be served. 
- 
   ; At this point, rdi contains the name 
   ; of the post within the directory. This will
   ; be used to encode the post, and serve it out to
   ; the reader.
-  mov rax, stdout
-  call FCGI_printf
+  call serve_post
+  ;mov rax, stdout
+  ;call FCGI_printf
   jmp .read
 
  .done:
@@ -115,7 +115,7 @@ buildpath:
 ; will serve a singular post based on some given path
 ; name in the rdi register. 
 ; ARGS: 
-;   - rdi, entry name
+;   - postpathbuffer, entry name
 ; USES: 
 ;   - 
 serve_post:
@@ -138,4 +138,7 @@ serve_post:
   call FCGI_printf
   jmp .read
  .done:
+  mov rdi, qword[postservefp]
+  call FCGI_fclose
   pop rax
+  ret

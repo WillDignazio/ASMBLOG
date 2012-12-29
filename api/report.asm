@@ -25,7 +25,7 @@ NGINX_SERVER_ADDR db 'SERVER_ADDR', 0
 NGINX_SERVER_PORT db 'SERVER_PORT', 0 
 NGINX_SERVER_NAME db 'SERVER_NAME', 0
 
-VERSION db '0.0.2', 10, 0
+VERSION db '0.1.0', 10, 0
 
 outstub db '%s', 10, 0
 report_header db 'ASMBLOG Version: %s', 10, 0

@@ -16,8 +16,10 @@ writeflag db 'w', 0
 readflag db 'r', 0
 readwriteflag db 'rw', 0
 
-header_html_file db 'html/header.html', 0   ; HTML file path
-headerfp dq 0                               ; HTML file handler field
+header_html_file db 'html/header.html', 0   ; HTML header file path
+footer_html_file db 'html/footer.html', 0   ; HTML footer file path
+headerfp dq 0                               ; HTML header file handler field
+footerfp dq 0
 
 
 [section .code]
@@ -57,7 +59,7 @@ serve_header:
   call FCGI_fopen
   mov qword[headerfp], rax
  .read:
-  mov rdx, qword[headerfp]  ; Initialized during the base.asm's initialize call
+  mov rdx, qword[headerfp]
   mov rdi, linebuffer       ; TODO: make dynamically allocated so not 500B max
   mov rsi, 500              ; Pull up to 500 bytes from line
   call FCGI_fgets
@@ -73,3 +75,32 @@ serve_header:
   call FCGI_fclose
   pop rax
   ret
+
+; Serve Footer
+; Serves the footer needed for the blog, this just lets custom content be
+; added after all the posts, which might suit some people's needs. Should be
+; functionally identical to the  header in terms of serving content.
+serve_footer:
+  push rax
+  mov rdi, footer_html_file
+  mov rsi, READ_ONLY
+  call FCGI_fopen
+  mov qword[footerfp], rax
+ .read:
+  mov rdx, qword[footerfp]  ; Initialized during the base.asm's initialize call
+  mov rdi, linebuffer       ; TODO: make dynamically allocated so not 500B max
+  mov rsi, 500              ; Pull up to 500 bytes from line
+  call FCGI_fgets
+  cmp rax, 0                ; Compare the pulled line with the end of file
+  je .done      
+  mov rsi, linebuffer       ; Point to beginning of line
+  mov rdi, strout           ; Prep a container for printf
+  mov rax, stdout           ; Set standard output
+  call FCGI_printf          
+  jmp .read
+ .done:
+  mov rdi, qword[footerfp]
+  call FCGI_fclose
+  pop rax
+  ret
+
