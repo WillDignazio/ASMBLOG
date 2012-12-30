@@ -1,7 +1,8 @@
-SMBLOG
+ASMBLOG
 
 ### What is new:
 
++ Dynamic post loading (make changes whenever)
 + HTML output, dynamic and/or static
 + NGINX environment reporting
 + CSS styling
@@ -20,6 +21,14 @@ Currently, ASMBLOG is designed primarily for operation under NGINX, as I have be
 
 ****
 
+### Problems 
+
+There are some limitations with the current build, namely that the character buffer for any line is 500 characters. This is because of the inability to sanely allocate memory in assembly. You can make the standard malloc call, but handling that return value can get a little too hairy for what I care about in v0.1. So basically, if you have a line in your post, or html, over 500 characters, I'm pretty sure you'll segfault. Not ideal for a web environment. However, there is the advantage that all data
+
+is tightly controlled, I don't believe there are any current vulnerabilities with the blog itself. The biggest problem is the underlying server, and the FCGI libraries themselves. The assembly routines are all desgined to do one task only, there is not much room for malicious intent. 
+
+****
+
 ### Requirements
 These are tentative, and will periodically be updated. 
 
@@ -28,3 +37,5 @@ These are tentative, and will periodically be updated.
 + x86* Architecture Computer
 + NGINX
 + FCGI module
+
+*While this will work on a 32 bit computer, you'd have to.... rewrite large portions of it. 
