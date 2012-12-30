@@ -1,7 +1,8 @@
-ASMBLOG
+#ASMBLOG
 
 ### What is new:
 
+####v0.1
 + Dynamic post loading (make changes whenever)
 + HTML output, dynamic and/or static
 + NGINX environment reporting
